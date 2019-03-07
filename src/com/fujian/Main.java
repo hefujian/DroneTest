@@ -2,6 +2,14 @@ package com.fujian;
 import java.util.ArrayList;
 import java.util.List;
 
+/*****
+ * Step1: created three classes, including Drone, PackageInfo and Trip.
+ *          Drone and Package have one static method in each class, it uses to create the class from the input.
+ *          Class trip is used to handler result.
+ * Step2: Used MergeSort method to sort packages by their weight.
+ * Step3: Calculated the most efficient deliveries for the drone to make on each trip. In this step,
+ *          just pick up the package which is lighter than or equal to the maxWeight of drone.
+ */
 public class Main {
     private static String inputString =
             "Line 1: [Drone #1 Name], [#1 10]\n" +
@@ -9,13 +17,14 @@ public class Main {
             "Line 3: [Location #2 Name2], [Location #2 4]\n" +
             "Line 4: [Location #3 Name3], [Location #3 2]\n" +
             "Line 5: [Location #4 Name4], [Location #4 6]\n" +
-            "Line 6: [Location #5 Name5], [Location #5 40]\n" +
+            "Line 6: [Location #5 Name5], [Location #5 4]\n" +
             "Line 7: [Location #6 Name6], [Location #6 3]\n" +
             "Line 8: [Location #7 Name7], [Location #7 3]\n" +
             "Line 9: [Location #8 Name8], [Location #8 5]\n";
 
 
     public static void main(String[] args) {
+
         Drone drone = Drone.createDroneFromInput(inputString);
         List<PackageInfo> packageInfoList = PackageInfo.createPackageInfoListFromInput(inputString);
         packageInfoList = sortPackageByWeight(packageInfoList, 0, packageInfoList.size() - 1);
@@ -45,7 +54,7 @@ public class Main {
         List<PackageInfo> packageInfoList = new ArrayList<>();
         for (int i = 0; i < sortedPackageList.size(); i++) {
 
-            if (sortedPackageList.get(i).getPackageWeight() < drone.getMaxWeight()) { // just pick up the package which is lighter than the maxWeight of drone.
+            if (sortedPackageList.get(i).getPackageWeight() <= drone.getMaxWeight()) { // just pick up the package which is lighter than or equal to the maxWeight of drone.
 
                 curWeight += sortedPackageList.get(i).getPackageWeight();
                 if (curWeight <= drone.getMaxWeight()) {
@@ -60,15 +69,13 @@ public class Main {
                     curTrip = new Trip();
                 }
             }
-            if (i == sortedPackageList.size() - 1) { // last package
-                //packageInfoList.add(sortedPackageList.get(i));
+            if (i == sortedPackageList.size() - 1 && packageInfoList.size()>0) { // last package
                 curTrip.setPackages(packageInfoList);
                 tripList.add(curTrip);
             }
         }
 
         return tripList;
-
     }
 
     /***
